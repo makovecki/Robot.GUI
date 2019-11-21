@@ -1,0 +1,41 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:UICore.Navigation.Controls"
+                    xmlns:navigation="clr-namespace:UICore.Navigation"
+                    xmlns:buttons="clr-namespace:UICore.Buttons.Controls"
+                    >
+    <Style TargetType="{x:Type local:NavigationControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:NavigationControl">
+                    <ControlTemplate.Resources>
+                        
+                        <DataTemplate DataType="{x:Type navigation:NavigationViewModel}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <buttons:ButtonIconControl Margin="8,3,7,0"  Command="{Binding BackCommand}"
+                                                               EllipseDiameter="24" IconWidth="12" IconHeight="12" 
+                                                               IconData="F1 M 33,22L 33,26L 19.75,26L 27,33L 20.5,33L 11,24L 20.5,15L 27,15L 19.75,22L 33,22 Z"/>
+                                <TextBlock Grid.Column="1" Opacity="0.7" FontFamily="Segoe UI Light" FontSize="24" Text="{Binding Current.ViewModel.Name}" TextTrimming="CharacterEllipsis"/>
+                                <local:BreadCrumbsControl CrumbCommand="{Binding CrumbCommand}" Margin="0,-3,0,0" Grid.Column="1" Grid.Row="1" BreadCrumbs="{Binding BreadCrumbs}" />
+                                <ContentPresenter Grid.Column="1" Grid.Row="2" Content="{Binding Current.View}"/>
+
+                            </Grid>
+                            
+                        </DataTemplate>
+                    </ControlTemplate.Resources>
+                    <ContentPresenter Content="{TemplateBinding Navigation}"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+</ResourceDictionary>

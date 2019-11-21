@@ -1,0 +1,118 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:UICore.Dialogs.Controls"
+                    xmlns:theme="clr-namespace:UICore.Presentation.xaml"
+                    xmlns:buttonscontrol="clr-namespace:UICore.Buttons.Controls">
+    <Style TargetType="{x:Type controls:DialogControl}">
+        <!--<Setter Property="Opacity" Value="0"/>-->
+        <Setter Property="LeftButtons" Value="{Binding Dialog.ViewModel.LeftButtons, RelativeSource={RelativeSource self}}"/>
+        <Setter Property="RightButtons" Value="{Binding Dialog.ViewModel.RightButtons, RelativeSource={RelativeSource self}}"/>
+        <Setter Property="StartAnimateClose" Value="{Binding Dialog.ViewModel.StartAnimateClose, RelativeSource={RelativeSource self}}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:DialogControl">
+
+                    <Grid Background="{theme:ThemeResource ResourceKey=ContentBackground}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1.5*"/>
+                                <ColumnDefinition Width="3*" MaxWidth="800"/>
+                                <ColumnDefinition Width="1.5*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Column="1" Margin="0,10" FontSize="26" Text="{Binding Dialog.Title, RelativeSource={RelativeSource Mode=TemplatedParent}}" TextTrimming="CharacterEllipsis"/>
+
+                            <ContentPresenter Grid.Row="1" Grid.Column="1" Content="{Binding Dialog.View, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+
+                            <Grid Grid.Row="2" Grid.Column="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <buttonscontrol:ButtonsControl Margin="-6,10,10,10" Buttons="{TemplateBinding LeftButtons}"/>
+
+                                <buttonscontrol:ButtonsControl Margin="10,10,0,10" HorizontalAlignment="Right" Grid.Column="1" Buttons="{TemplateBinding RightButtons}"/>
+                                
+                            </Grid>
+                            
+                        </Grid>
+                        
+                    </Grid>
+                    <ControlTemplate.Resources>
+                        <Storyboard x:Key="UICore.OverLayClose">
+                            <DoubleAnimation AccelerationRatio=".9"
+                             BeginTime="0:0:0"
+                             Storyboard.TargetProperty="Opacity"
+                             To="0"
+                             Duration="0:0:0.7" />
+                        </Storyboard>
+                        <Storyboard x:Key="UICore.OverLayShown"  >
+                            <DoubleAnimation AccelerationRatio=".9"
+                             BeginTime="0:0:0"
+                             Storyboard.TargetProperty="Opacity"
+                             To="1"
+                             Duration="0:0:0.7" />
+                        </Storyboard>
+                    </ControlTemplate.Resources>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource self}, Path=IsVisible}" 
+                         Value="True">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard Storyboard="{StaticResource UICore.OverLayShown}" />
+                            </DataTrigger.EnterActions>
+                        </DataTrigger>
+                        
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style TargetType="{x:Type controls:DialogOverlayControl}">
+        <Setter Property="Opacity" Value="0.3"/>
+        <Setter Property="StartAnimateClose" Value="{Binding Dialog.ViewModel.StartAnimateClose, RelativeSource={RelativeSource self}}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:DialogOverlayControl">
+                    
+                    <Grid Name="PART_Background"
+                          Background="Black"
+                          FocusVisualStyle="{x:Null}"
+                          Focusable="False"
+                          />
+
+
+                    <ControlTemplate.Resources>
+                        <Storyboard x:Key="UICore.OverLayClose">
+                            <DoubleAnimation AccelerationRatio=".9"
+                             BeginTime="0:0:0"
+                             Storyboard.TargetProperty="Opacity"
+                             To="0"
+                             Duration="0:0:0.7" />
+                        </Storyboard>
+                        <Storyboard x:Key="UICore.OverLayShown"  >
+                            <DoubleAnimation AccelerationRatio=".9"
+                             BeginTime="0:0:0"
+                             Storyboard.TargetProperty="Opacity"
+                             To="0.7"
+                             Duration="0:0:0.7" />
+                        </Storyboard>
+                    </ControlTemplate.Resources>
+                    <!--<ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource self}, Path=IsVisible}" 
+                         Value="True">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard Storyboard="{StaticResource UICore.OverLayShown}" />
+                            </DataTrigger.EnterActions>
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>-->
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

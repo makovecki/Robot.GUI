@@ -1,0 +1,17 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:UICore.Controls.TextBlock"
+                    xmlns:theme="clr-namespace:UICore.Presentation.xaml">
+    <Style TargetType="local:TextBlockTitle" BasedOn="{StaticResource {x:Type TextBlock}}">
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="Foreground" Value="{theme:ThemeResource ResourceKey=ContentForeground}"/>
+    </Style>
+    <Style TargetType="local:TextBlockLabel" BasedOn="{StaticResource {x:Type TextBlock}}">
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Foreground" Value="{theme:ThemeResource ResourceKey=ContentForeground}"/>
+    </Style>
+</ResourceDictionary>

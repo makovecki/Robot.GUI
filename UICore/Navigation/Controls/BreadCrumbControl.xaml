@@ -1,0 +1,37 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:UICore.Navigation.Controls"
+                    xmlns:buttons="clr-namespace:UICore.Buttons.Controls"
+                    xmlns:converters ="clr-namespace:UICore.Converters">
+    <Style TargetType="{x:Type local:BreadCrumbsControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:BreadCrumbsControl">
+                    <ControlTemplate.Resources>
+                        <converters:StringToUpperConverter x:Key="StringToUpperConverter"/>
+                    </ControlTemplate.Resources>
+                    <ItemsControl Height="12" ItemsSource="{TemplateBinding BreadCrumbs}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Path x:Name="Separator" Margin="3,3,3,0" Data="M45,0.045623779296875L51,0.045623779296875 51,95.9987487792969 45,95.9987487792969 45,0.045623779296875z" Stretch="Uniform" Fill="Black" Height="8"  />
+                                    <buttons:ButtonMenuControl FontSize="10" Command="{Binding CrumbCommand, RelativeSource={RelativeSource AncestorType=local:BreadCrumbsControl}}" CommandParameter="{Binding }" Content="{Binding ViewModel.Name, Converter={StaticResource StringToUpperConverter}}" />
+                                </StackPanel>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource PreviousData}}" Value="{x:Null}">
+                                        <Setter Property="Visibility" TargetName="Separator" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

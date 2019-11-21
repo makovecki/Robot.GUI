@@ -1,0 +1,11 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:UICore.Themes">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/UICore;component/Dialogs/Controls/DialogControl.xaml" />
+        <ResourceDictionary Source="/UICore;component/Buttons/Controls/ButtonControls.xaml" />
+        <ResourceDictionary Source="/UICore;component/Buttons/Controls/ButtonsControl.xaml" />
+        <ResourceDictionary Source="/UICore;component/Navigation/Controls/NavigationControl.xaml" />
+        <ResourceDictionary Source="/UICore;component/Navigation/Controls/BreadCrumbControl.xaml" />
+        <ResourceDictionary Source="/UICore;component/Controls/ProgressBar/ProgressBarControl.xaml" />
+        <ResourceDictionary Source="/UICore;component/Controls/TextBlock/TextBlockControl.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>

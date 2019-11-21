@@ -1,0 +1,187 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:buttonscontrol="clr-namespace:UICore.Buttons.Controls"
+    xmlns:dialogcontrols="clr-namespace:UICore.Dialogs.Controls"
+    xmlns:navigationcontrols="clr-namespace:UICore.Navigation.Controls"
+    xmlns:theme="clr-namespace:UICore.Presentation.xaml">
+    <Style x:Key="MainWindowStyle" TargetType="{x:Type Window}">
+        <Setter Property="UseLayoutRounding" Value="True" />
+        <Setter Property="TextOptions.TextFormattingMode" Value="Ideal" />
+        <Setter Property="TextOptions.TextRenderingMode" Value="ClearType" />
+        <Setter Property="Foreground" Value="{theme:ThemeResource ResourceKey=ContentForeground}" />
+
+        <Setter Property="WindowChrome.WindowChrome">
+            <Setter.Value>
+                <WindowChrome
+                    CaptionHeight="35"
+                    CornerRadius="0"
+                    GlassFrameThickness="1"
+                    NonClientFrameEdges="None"
+                    ResizeBorderThickness="4"
+                    UseAeroCaptionButtons="False" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Window}">
+                    <ControlTemplate.Resources>
+                        <Style x:Key="SystemButtonStyle" TargetType="Button">
+                            <Setter Property="Foreground" Value="{theme:ThemeResource ResourceKey=ContentForeground}" />
+                            <Setter Property="FontSize" Value="10" />
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Grid x:Name="LayoutRoot" Background="{TemplateBinding Background}">
+                                            <TextBlock
+                                                x:Name="txt"
+                                                Margin="0,5,0,0"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                FontFamily="Segoe MDL2 Assets"
+                                                Foreground="{TemplateBinding Foreground}"
+                                                RenderOptions.ClearTypeHint="Auto"
+                                                Text="{TemplateBinding Content}"
+                                                TextOptions.TextFormattingMode="Display"
+                                                TextOptions.TextRenderingMode="Aliased" />
+                                        </Grid>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background">
+                                                    <Setter.Value>
+                                                        <SolidColorBrush Opacity="0.3" Color="#E5E5E5" />
+                                                    </Setter.Value>
+                                                </Setter>
+                                                <Setter Property="Foreground" Value="{theme:ThemeResource ResourceKey=ContentForeground}" />
+                                            </Trigger>
+                                            <Trigger Property="IsPressed" Value="True">
+                                                <Setter TargetName="LayoutRoot" Property="Opacity" Value="0.7" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+
+                        <Style
+                            x:Key="MinimizeButtonStyle"
+                            BasedOn="{StaticResource SystemButtonStyle}"
+                            TargetType="Button">
+                            <Setter Property="Content" Value="&#xE949;" />
+                        </Style>
+
+                        <Style
+                            x:Key="MaximizeButtonStyle"
+                            BasedOn="{StaticResource SystemButtonStyle}"
+                            TargetType="Button">
+                            <Setter Property="Content" Value="&#xE739;" />
+                        </Style>
+
+                        <Style
+                            x:Key="RestoreButtonStyle"
+                            BasedOn="{StaticResource SystemButtonStyle}"
+                            TargetType="Button">
+                            <Setter Property="Content" Value="&#xE923;" />
+                        </Style>
+
+                        <Style
+                            x:Key="CloseButtonStyle"
+                            BasedOn="{StaticResource SystemButtonStyle}"
+                            TargetType="Button">
+                            <Setter Property="Content" Value="&#xE10A;" />
+                            <Setter Property="FontSize" Value="15" />
+                            <Setter Property="FontWeight" Value="UltraBlack" />
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#E50000" />
+                                    <Setter Property="Foreground" Value="#FFFFFF" />
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="true">
+                                    <Setter Property="Opacity" Value="0.5" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ControlTemplate.Resources>
+                    <AdornerDecorator>
+                        <Border BorderBrush="Gray" BorderThickness="1">
+                            <Grid x:Name="PART_Grid" Background="{theme:ThemeResource ResourceKey=ContentBackground}">
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="35" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+
+                                <TextBlock
+                                    Margin="10,5"
+                                    FontFamily="Segoe UI"
+                                    FontSize="14"
+                                    Opacity="0.5"
+                                    Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" />
+
+                                <navigationcontrols:NavigationControl
+                                    Grid.Row="1"
+                                    Margin="0,-10,0,0"
+                                    Navigation="{Binding Navigation}" />
+                                <dialogcontrols:DialogOverlayControl
+                                    Grid.RowSpan="2"
+                                    Dialog="{Binding Dialog}"
+                                    Visibility="Collapsed" />
+
+                                <Grid
+                                    Grid.Column="1"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Top">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <buttonscontrol:ButtonsControl
+                                        Margin="10,0"
+                                        Buttons="{Binding TopButtons}"
+                                        WindowChrome.IsHitTestVisibleInChrome="True" />
+                                    <dialogcontrols:DialogOverlayControl Opacity="0"
+                                        Grid.RowSpan="2"
+                                        Dialog="{Binding Dialog}"
+                                        Visibility="Collapsed" />
+                                    <StackPanel
+                                        Grid.Column="1"
+                                        Height="35"
+                                        Orientation="Horizontal"
+                                        WindowChrome.IsHitTestVisibleInChrome="True">
+                                        <Button
+                                            Width="45"
+                                            Command="{Binding WindowMinimizeCommand}"
+                                            Style="{StaticResource MinimizeButtonStyle}" />
+                                        <Button
+                                            Width="45"
+                                            Command="{Binding WindowMaximizeCommand}"
+                                            Style="{StaticResource MaximizeButtonStyle}" />
+                                        <Button
+                                            Width="45"
+                                            Command="{Binding WindowCloseCommand}"
+                                            Content="&#xE10A;"
+                                            Style="{StaticResource CloseButtonStyle}" />
+                                    </StackPanel>
+                                </Grid>
+                                <dialogcontrols:DialogControl
+                                    Grid.Row="1"
+                                    Margin="0,0,0,45"
+                                    VerticalAlignment="Center"
+                                    Dialog="{Binding Dialog}"
+                                    Visibility="Collapsed" />
+                            </Grid>
+                        </Border>
+                    </AdornerDecorator>
+                    <ControlTemplate.Triggers>
+
+                        <Trigger Property="WindowState" Value="Maximized">
+                            <Setter TargetName="PART_Grid" Property="Margin" Value="8" />
+
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
