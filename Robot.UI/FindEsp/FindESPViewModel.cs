@@ -1,8 +1,9 @@
 ﻿
 using Robot.UI.ESPController;
 using Robot.UI.FindEsp.Model;
-using Robot.UI.FindEsp.Services;
+using Robot.UI.Services;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -68,11 +69,11 @@ namespace Robot.UI.FindEsp
 
         }
 
-        private void SynchronizeESPs(List<ESP> newesps)
+        private void SynchronizeESPs(ConcurrentBag<ESP> newesps)
         {
             newesps.ToList().ForEach(e =>
             {
-               if (!FoundEsps.Any(esp=>esp.Ip.Equals(e.Ip))) FoundEsps.Add(e);
+               if (e!= null && !FoundEsps.Any(esp=>esp.Ip.Equals(e.Ip))) FoundEsps.Add(e);
             });
         }
 
