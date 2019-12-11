@@ -1,5 +1,6 @@
 ﻿using Robot.UI.FindEsp.Model;
 using Robot.UI.Services;
+using Robot.UI.Services.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,7 +11,7 @@ namespace Robot.UI.ESPController.Settings
 {
     public class SettingsViewModel : Observable
     {
-        public SettingsViewModel(ESP esp, IESPMessageService messageService)
+        public SettingsViewModel(ESPEcho esp, IESPMessageService messageService)
         {
             name = esp.Name;
             SendCommand = Make.UICommand.Do(() => SendDataToEPS(esp, messageService));

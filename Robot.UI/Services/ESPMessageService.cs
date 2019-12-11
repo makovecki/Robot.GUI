@@ -8,13 +8,14 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using Robot.UI.FindEsp.Model;
+using Robot.UI.Services.Model;
 
 namespace Robot.UI.Services
 {
     public class ESPMessageService : IESPMessageService
     {
         private readonly UdpClient client;
-
+        private readonly Dictionary<int, List<Action<ESP>>> listeners = new Dictionary<int, List<Action<ESP>>>();
         public ESPMessageService()
         {
             client = new UdpClient(0);
@@ -27,21 +28,27 @@ namespace Robot.UI.Services
            {
                while (true)
                {
-                   var echo = client.ReceiveAsync().Result;
-                   var esp = new ESP(echo);
-                   replys.Add(esp);
+                   var esp = ResolveESPMessageType(client.ReceiveAsync().Result);
+                   if (listeners.TryGetValue(esp.MessageType, out List<Action<ESP>>? messageListeners)) messageListeners.ForEach(listener => listener(esp));
                }
            });
         }
-        ConcurrentBag<ESP> replys = new ConcurrentBag<ESP>();
-        public Task<ConcurrentBag<ESP>> DiscoverESPAsync(int receiveTimeout = 100)
-        {
 
+        private ESP ResolveESPMessageType(UdpReceiveResult result)
+        {
+            switch (result.Buffer[0])
+            {
+                case 0: return new ESPEcho(result);
+                default:
+                    return new ESP(result);
+            }
+        }
+        
+        public Task DiscoverESPAsync(int receiveTimeout = 100)
+        {
             return Task.Factory.StartNew(() =>
             {
-                replys.Clear();
                 client.EnableBroadcast = true;
-
                 var requestData = new byte[] { 0, 0, 4 }.Concat(Encoding.ASCII.GetBytes("ping")).ToArray();
                 var host = Dns.GetHostEntry(Dns.GetHostName());
                 foreach (IPAddress netip in host.AddressList.Where(x => x.AddressFamily == AddressFamily.InterNetwork))
@@ -50,27 +57,20 @@ namespace Robot.UI.Services
                     ip[3] = 255;
                     client.Send(requestData, requestData.Length, new IPEndPoint(new IPAddress(ip), 1973));
                 }
-
                 Task.WaitAny(Task.Delay(receiveTimeout));
-
-
-                return replys;
             });
         }
 
-        public async Task<bool> SaveDataAsync(ESP esp, string name)
+        public void SaveDataAsync(ESP esp, string name)
         {
-            
-            replys.Clear();
             var message = new byte[] { 1 }.Concat(BitConverter.GetBytes((Int16)name.Length).Reverse()).Concat(Encoding.ASCII.GetBytes(name)).ToArray();
             client.Send(message, message.Length, new IPEndPoint(esp.Ip, 1973));
-            while(replys.Count==0)
-            {
-                await Task.Delay(100);
-            }
+        }
 
-            return true;
-            
+        public void AddListener(int messageType, Action<ESP> action)
+        {
+            if (listeners.TryGetValue(messageType, out List<Action<ESP>>? messageListeners)) messageListeners.Add(action);
+            else listeners.Add(messageType, new List<Action<ESP>> { action });
         }
     }
 }

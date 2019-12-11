@@ -2,6 +2,7 @@
 using Robot.UI.ESPController;
 using Robot.UI.FindEsp.Model;
 using Robot.UI.Services;
+using Robot.UI.Services.Model;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -28,15 +29,16 @@ namespace Robot.UI.FindEsp
             
             CancelCommand = Make.UICommand.Do(()=> { IsSearching = false; });
             StartSearchCommand = Make.UICommand.Do(() => ESPPingAsync(dispatcher));
-            ConnectCommand = Make.UICommand<ESP>.Do((esp) => Connect(navigationService,esp));
+            ConnectCommand = Make.UICommand<ESPEcho>.Do((esp) => Connect(navigationService,esp));
             this.messageService = messageService;
-            
+            messageService.AddListener(0, (message) => ProcessMessage(message,dispatcher));
             ESPPingAsync(dispatcher);
 
         }
 
+
         public bool IsSingleInstance => false;
-        private void Connect(INavigationService navigationService, ESP esp)
+        private void Connect(INavigationService navigationService, ESPEcho esp)
         {
             IsSearching = false;
             navigationService.NavigateTo<ESPControllerViewModel, ESPControllerView>(esp);
@@ -62,20 +64,14 @@ namespace Robot.UI.FindEsp
             while (true)
             {
                 if (!IsSearching) break;    
-                var newesps = await messageService.DiscoverESPAsync();
-                SynchronizeESPs(newesps);
+                await messageService.DiscoverESPAsync();
             }
-
-
         }
-
-        private void SynchronizeESPs(ConcurrentBag<ESP> newesps)
+        private void ProcessMessage(ESP esp, IDispatcher dispatcher)
         {
-            newesps.ToList().ForEach(e =>
-            {
-               if (e!= null && !FoundEsps.Any(esp=>esp.Ip.Equals(e.Ip))) FoundEsps.Add(e);
-            });
+            if (!FoundEsps.Any(e => e.Ip.Equals(esp.Ip))) dispatcher.BeginInvoke(()=>FoundEsps.Add(esp));
         }
+        
 
         public string Name { get; set; }
     }
